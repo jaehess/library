@@ -2,9 +2,7 @@ Surface
 =======
 
 ```js
-  var Surface = require("library/meteor/core/Surface");
-
-  var foo = new Surface({
+  var foo = new library.meteor.core.Surface({
     template: Template.hello,
     size: [undefined, undefined],
     properties: {
@@ -17,9 +15,7 @@ Surface
 
 You can add data too...
 ```js
-  var Surface = require("library/meteor/core/Surface");
-
-  var foo = new MeteorSurface({
+  var foo = new library.meteor.core.Surface({
       template: options.template,
       data: data.get(),
       size: [undefined, undefined],
