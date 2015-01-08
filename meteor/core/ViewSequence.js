@@ -5,7 +5,7 @@ define(function(require, exports, module) {
   var MeteorSurface = require("library/meteor/core/Surface");
   var ReactiveEntity = require("library/meteor/core/ReactiveEntity");
 
-  var ViewSequence = function(options) {
+  var ViewSequence = function(options, eventReciever) {
     var self = this;
     var index = {};
 
@@ -15,13 +15,18 @@ define(function(require, exports, module) {
     if (_.isArray(options.data)) {
         _.each(options.data, function(row) {
 
-            sequence.push(new MeteorSurface({
+            var temp = new MeteorSurface({
                 template: options.template,
                 data: row,
                 size: options.size,
                 properties: options.properties,
                 classes: options.classes || []
-            }));
+            });
+
+            if (eventReciever) temp.pipe(eventReciever);
+            
+            sequence.push(temp);
+
 
         });        
     } else if (typeof options.data == 'object') {
@@ -30,13 +35,18 @@ define(function(require, exports, module) {
           addedAt: function(doc, atIndex, before) {
             // Keep an reactive index
             index[doc._id] = new ReactiveEntity(doc);
-            // Add surface
-            sequence.splice(atIndex, 0, new MeteorSurface({
+
+            var temp = new MeteorSurface({
                 template: options.template,
                 data: index[doc._id].get(),
                 size: options.size,
                 properties: options.properties
-            }));            
+            });
+            
+            if (eventReciever) temp.pipe(eventReciever);
+
+            // Add surface
+            sequence.splice(atIndex, 0, temp);            
           },
           changedAt: function(newDocument, oldDocument, atIndex) {
             index[newDocument._id].set(newDocument);
