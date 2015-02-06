@@ -49,7 +49,13 @@ define(function(require, exports, module) {
             sequence.splice(atIndex, 0, temp);            
           },
           changedAt: function(newDocument, oldDocument, atIndex) {
-            index[newDocument._id].set(newDocument);
+            sequence._.setValue(atIndex, new MeteorSurface({
+                template: options.template,
+                data: newDocument,
+                size: options.size,
+                properties: options.properties
+              }) 
+            )
           },
           removedAt: function(oldDocument, atIndex) {
             // Remove item
